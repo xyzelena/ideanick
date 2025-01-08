@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "@ideanick/backend",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -8,7 +8,15 @@
     "start": "node ./dist/index.js",
     "prettify": "prettier --loglevel warn --cache --write '{src/**/*,*}.{ts,tsx,js,json,yml,scss}' '!**/{node_modules,dist}/**/*'"
   },
+  "dependencies": {
+    "@trpc/server": "^10.45.2",
+    "@types/cors": "^2.8.17",
+    "D": "^1.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  },
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "@types/node": "^22.10.2",
     "prettier": "^3.4.2",
     "rimraf": "^6.0.1",
