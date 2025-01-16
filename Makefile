@@ -12,17 +12,11 @@ install:
 	pnpm install
 
 types:
-	cd backend && pnpm types
-	cd webapp && pnpm types
+	pnpm types
 
 prettify:
-	cd backend && pnpm prettify
-	cd webapp && pnpm prettify
+	pnpm prettify
 
 dev:
-	cd backend && pnpm dev & \
-	cd webapp && pnpm dev
+	pnpm dev
 
-build:
-	cd backend && pnpm build
-	cd webapp && pnpm build
