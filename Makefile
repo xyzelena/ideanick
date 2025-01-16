@@ -1,5 +1,20 @@
 .PHONY: install dev clean
 
+install:
+	pnpm install
+
+dev:
+	pnpm dev
+
+types:
+	pnpm types
+
+lint:
+	pnpm lint
+
+prettify:
+	pnpm prettify
+
 clean:
 	rm -rf node_modules
 	rm -rf webapp/node_modules
@@ -8,15 +23,6 @@ clean:
 	rm -rf webapp/dist
 	rm -rf webapp/build
 
-install:
-	pnpm install
 
-types:
-	pnpm types
 
-prettify:
-	pnpm prettify
-
-dev:
-	pnpm dev
 
