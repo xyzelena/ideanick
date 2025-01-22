@@ -1,12 +1,18 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { getAllIdeasRoute, getViewIdeaRoute } from './lib/routes';
 import { TrpcProvider } from './lib/trpc';
-import { AllIdeasPage } from './pages/AllIdeasPage/index';
+import { AllIdeasPage } from './pages/AllIdeasPage';
+import { ViewIdeaPage } from './pages/ViewIdeaPage';
 
-const App = () => {
+export const App = () => {
   return (
     <TrpcProvider>
-      <AllIdeasPage />
+      <BrowserRouter>
+        <Routes>
+          <Route path={getAllIdeasRoute()} element={<AllIdeasPage />} />
+          <Route path={getViewIdeaRoute({ ideaNick: ':ideaNick' })} element={<ViewIdeaPage />} />
+        </Routes>
+      </BrowserRouter>
     </TrpcProvider>
   );
 };
-
-export default App;
