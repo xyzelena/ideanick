@@ -15,6 +15,7 @@ export const trpcRouter = trpc.router({
   getIdeas: trpc.procedure.query(() => {
     return { ideas: ideas.map((idea) => _.pick(idea, ['nick', 'name', 'description'])) };
   }),
+
   getIdea: trpc.procedure
     .input(
       z.object({
