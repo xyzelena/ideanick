@@ -12,6 +12,12 @@ types:
 lint:
 	pnpm lint
 
+stylelint:
+	pnpm w stylelint --fix
+
+stylecheck:
+	pnpm w stylecheck
+
 prettify:
 	pnpm prettify
 
