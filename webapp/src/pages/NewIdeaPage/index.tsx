@@ -59,7 +59,7 @@ export const NewIdeaPage = () => {
 
         <Textarea name="text" label="Text" formik={formik} />
 
-        {!formik.isValid && (
+        {!formik.isValid && !!formik.submitCount && (
           <div style={{ color: 'red' }}>Some fields are invalid</div>
         )}
 
