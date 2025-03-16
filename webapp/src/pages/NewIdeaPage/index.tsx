@@ -11,6 +11,7 @@ import { trpc } from '../../lib/trpc';
 
 export const NewIdeaPage = () => {
   const [successMessageVisible, setSuccessMessageVisible] = useState(false);
+  const [submittingError, setSubmittingError] = useState<string | null>(null);
 
   const createIdea = trpc.createIdea.useMutation();
 
@@ -22,16 +23,21 @@ export const NewIdeaPage = () => {
       text: '',
     },
     validate: withZodSchema(zCreateIdeaTrpcInput),
+
     onSubmit: async (values) => {
-      await createIdea.mutateAsync(values);
-
-      formik.resetForm();
-
-      setSuccessMessageVisible(true);
-
-      setTimeout(() => {
-        setSuccessMessageVisible(false);
-      }, 3000);
+      try {
+        await createIdea.mutateAsync(values);
+        formik.resetForm();
+        setSuccessMessageVisible(true);
+        setTimeout(() => {
+          setSuccessMessageVisible(false);
+        }, 3000);
+      } catch (error: any) {
+        setSubmittingError(error.message);
+        setTimeout(() => {
+          setSubmittingError(null);
+        }, 3000);
+      }
     },
   });
 
@@ -53,6 +59,10 @@ export const NewIdeaPage = () => {
 
         {!formik.isValid && !!formik.submitCount && (
           <div style={{ color: 'red' }}>Some fields are invalid</div>
+        )}
+
+        {!!submittingError && (
+          <div style={{ color: 'red' }}>{submittingError}</div>
         )}
 
         {successMessageVisible && (
