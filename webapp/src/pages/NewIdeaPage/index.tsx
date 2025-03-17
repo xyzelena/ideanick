@@ -53,7 +53,12 @@ export const NewIdeaPage = () => {
 
         <Input name="nick" label="Nick" formik={formik} />
 
-        <Input name="description" label="Description" formik={formik} />
+        <Input
+          name="description"
+          label="Description"
+          formik={formik}
+          maxWidth={500}
+        />
 
         <Textarea name="text" label="Text" formik={formik} />
 
