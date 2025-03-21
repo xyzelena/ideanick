@@ -6,6 +6,12 @@ install:
 dev:
 	pnpm dev
 
+pmd:
+	pnpm b pmd
+
+pgc:
+	pnpm b pgc
+
 types:
 	pnpm types
 
