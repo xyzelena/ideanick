@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { useParams } from 'react-router-dom';
 
 import { Segment } from '../../components/Segment';
@@ -19,19 +20,25 @@ export const ViewIdeaPage = () => {
     return <span>Loading...</span>;
   }
 
-  if (isError) {
-    return <span>Error: {error.message}</span>;
+  if (isError || !data) {
+    return <span>Error: {error?.message || 'Failed to load idea'}</span>;
   }
 
   if (!data.idea) {
     return <span>Idea not found</span>;
   }
 
+  const { idea } = data;
+
   return (
-    <Segment title={data.idea.name} description={data.idea.description}>
+    <Segment title={idea.name} description={idea.description}>
+      <div className={css.createdAt}>
+        Created At: {format(idea.createdAt, 'yyyy-MM-dd')}
+      </div>
+
       <div
         className={css.text}
-        dangerouslySetInnerHTML={{ __html: data.idea.text }}
+        dangerouslySetInnerHTML={{ __html: idea.text }}
       />
     </Segment>
   );

@@ -1,9 +1,9 @@
-import { trpc } from '../lib/trpc';
+import { trpc } from '../lib/trpc.js';
 
 // @index('./**/index.ts', f => `import { ${f.path.split('/').slice(0, -1).pop()}TrpcRoute } from '${f.path.split('/').slice(0, -1).join('/')}'`)
-import { createIdeaTrpcRoute } from './createIdea';
-import { getIdeaTrpcRoute } from './getIdea';
-import { getIdeasTrpcRoute } from './getIdeas';
+import { createIdeaTrpcRoute } from './createIdea/index.js';
+import { getIdeaTrpcRoute } from './getIdea/index.js';
+import { getIdeasTrpcRoute } from './getIdeas/index.js';
 // @endindex
 
 export const trpcRouter = trpc.router({

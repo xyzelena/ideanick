@@ -1,9 +1,9 @@
 import cors from 'cors';
 import express from 'express';
 
-import { type AppContext, createAppContext } from './lib/ctx';
-import { applyTrpcToExpressApp } from './lib/trpc';
-import { trpcRouter } from './router';
+import { type AppContext, createAppContext } from './lib/ctx.js';
+import { applyTrpcToExpressApp } from './lib/trpc.js';
+import { trpcRouter } from './router/index.js';
 
 void (async () => {
   let ctx: AppContext | null = null;

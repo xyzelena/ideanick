@@ -14,8 +14,8 @@ export const AllIdeasPage = () => {
     return <span>Loading...</span>;
   }
 
-  if (isError || !data) {
-    return <span>Error: {error?.message}</span>;
+  if (isError || !data?.ideas) {
+    return <span>Error: {error?.message || 'No ideas found'}</span>;
   }
 
   return (
