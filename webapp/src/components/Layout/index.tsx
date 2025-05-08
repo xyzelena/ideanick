@@ -3,6 +3,7 @@ import { Link, Outlet } from 'react-router-dom';
 import {
   getAllIdeasRoute,
   getNewIdeaRoute,
+  getSignInRoute,
   getSignUpRoute,
 } from '../../lib/routes';
 
@@ -29,6 +30,12 @@ export const Layout = () => {
           <li className={css.item}>
             <Link className={css.link} to={getSignUpRoute()}>
               Sign Up
+            </Link>
+          </li>
+
+          <li className={css.item}>
+            <Link className={css.link} to={getSignInRoute()}>
+              Sign In
             </Link>
           </li>
         </ul>
