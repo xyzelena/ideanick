@@ -1,6 +1,6 @@
-import crypto from 'crypto';
-
 import { trpc } from '../../lib/trpc.js';
+import { getPasswordHash } from '../../utils/getPasswordHash.js';
+
 import { zSignUpTrpcInput } from './input.js';
 
 export const signUpTrpcRoute = trpc.procedure
@@ -20,10 +20,7 @@ export const signUpTrpcRoute = trpc.procedure
     await ctx.prisma.user.create({
       data: {
         nick: input.nick,
-        password: crypto
-          .createHash('sha256')
-          .update(input.password)
-          .digest('hex'),
+        password: getPasswordHash(input.password),
       },
     });
     return true;
