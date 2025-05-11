@@ -1,7 +1,9 @@
 import { zSignUpTrpcInput } from '@ideanick/backend/src/router/signUp/input';
 import { useFormik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
+import Cookies from 'js-cookie';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
 import { Alert } from '../../components/Alert/index.tsx';
@@ -9,11 +11,15 @@ import { Button } from '../../components/Button/index.tsx';
 import { FormItems } from '../../components/FormItems/index.tsx';
 import { Input } from '../../components/Input/index.tsx';
 import { Segment } from '../../components/Segment/index.tsx';
+import { getAllIdeasRoute } from '../../lib/routes';
 
 import { trpc } from '../../lib/trpc.tsx';
 
 export const SignUpPage = () => {
-  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
+  const navigate = useNavigate();
+
+  const trpcUtils = trpc.useUtils();
+
   const [submittingError, setSubmittingError] = useState<string | null>(null);
 
   const signUp = trpc.signUp.useMutation();
@@ -42,12 +48,15 @@ export const SignUpPage = () => {
     onSubmit: async (values) => {
       try {
         setSubmittingError(null);
-        await signUp.mutateAsync(values);
-        formik.resetForm();
-        setSuccessMessageVisible(true);
-        setTimeout(() => {
-          setSuccessMessageVisible(false);
-        }, 3000);
+
+        const { token } = await signUp.mutateAsync(values);
+        Cookies.set('token', token, { expires: 99999 });
+
+        await trpcUtils.invalidate().catch((error) => {
+          console.error('Failed to invalidate cache:', error);
+        });
+
+        await navigate(getAllIdeasRoute());
       } catch (err: any) {
         setSubmittingError(err.message);
       }
@@ -79,10 +88,6 @@ export const SignUpPage = () => {
           )}
 
           {submittingError && <Alert color="red">{submittingError}</Alert>}
-
-          {successMessageVisible && (
-            <Alert color="green">Thanks for sign up!</Alert>
-          )}
 
           <Button loading={formik.isSubmitting}>Sign Up</Button>
         </FormItems>
