@@ -1,7 +1,9 @@
 import { type Express } from 'express';
 import { Passport } from 'passport';
 import { ExtractJwt, Strategy as JWTStrategy } from 'passport-jwt';
+
 import { type AppContext } from './ctx.js';
+import { env } from './env.js';
 
 export const applyPassportToExpressApp = (
   expressApp: Express,
@@ -12,7 +14,7 @@ export const applyPassportToExpressApp = (
   passport.use(
     new JWTStrategy(
       {
-        secretOrKey: 'not-really-secret-jwt-key',
+        secretOrKey: env.JWT_SECRET,
         jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
       },
       (jwtPayload: string, done) => {
