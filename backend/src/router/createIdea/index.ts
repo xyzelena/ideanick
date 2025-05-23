@@ -1,5 +1,4 @@
 import { type z } from 'zod';
-import { type AppContext } from '../../lib/ctx.js';
 import { trpc } from '../../lib/trpc.js';
 
 import { zCreateIdeaTrpcInput } from './input.js';
@@ -12,8 +11,12 @@ export const createIdeaTrpcRoute = trpc.procedure
       ctx,
     }: {
       input: z.infer<typeof zCreateIdeaTrpcInput>;
-      ctx: AppContext;
+      ctx: { me: { id: string } | null; prisma: any };
     }) => {
+      if (!ctx.me) {
+        throw Error('UNAUTHORIZED');
+      }
+
       const exIdea = await ctx.prisma.idea.findUnique({
         where: {
           nick: input.nick,
@@ -23,7 +26,7 @@ export const createIdeaTrpcRoute = trpc.procedure
         throw Error('Idea with this nick already exists');
       }
       await ctx.prisma.idea.create({
-        data: input,
+        data: { ...input, authorId: ctx.me.id },
       });
       return true;
     }
