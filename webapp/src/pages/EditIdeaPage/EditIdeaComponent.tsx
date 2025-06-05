@@ -1,10 +1,7 @@
 import type { TrpcRouterOutput } from '@ideanick/backend/src/router';
 import { zUpdateIdeaTrpcInput } from '@ideanick/backend/src/router/updateIdea/input';
 
-import { useFormik } from 'formik';
-import { withZodSchema } from 'formik-validator-zod';
 import pick from 'lodash/pick';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Alert } from '../../components/Alert';
@@ -14,6 +11,7 @@ import { Input } from '../../components/Input';
 import { Segment } from '../../components/Segment';
 import { Textarea } from '../../components/Textarea';
 
+import { useForm } from '../../lib/form';
 import { getViewIdeaRoute } from '../../lib/routes';
 import { trpc } from '../../lib/trpc';
 
@@ -24,24 +22,18 @@ export const EditIdeaComponent = ({
 }) => {
   const navigate = useNavigate();
 
-  const [submittingError, setSubmittingError] = useState<string | null>(null);
-
   const updateIdea = trpc.updateIdea.useMutation();
 
-  const formik = useFormik({
+  const { formik, buttonProps, alertProps } = useForm({
     initialValues: pick(idea, ['name', 'nick', 'description', 'text']),
-    validate: withZodSchema(zUpdateIdeaTrpcInput.omit({ ideaId: true })),
+    validationSchema: zUpdateIdeaTrpcInput.omit({ ideaId: true }),
+
     onSubmit: async (values) => {
-      try {
-        setSubmittingError(null);
-
-        await updateIdea.mutateAsync({ ideaId: idea.id, ...values });
-
-        void navigate(getViewIdeaRoute({ ideaNick: values.nick }));
-      } catch (err: any) {
-        setSubmittingError(err.message);
-      }
+      await updateIdea.mutateAsync({ ideaId: idea.id, ...values });
+      void navigate(getViewIdeaRoute({ ideaNick: values.nick }));
     },
+    resetOnSuccess: false,
+    showValidationAlert: true,
   });
 
   return (
@@ -61,12 +53,9 @@ export const EditIdeaComponent = ({
 
           <Textarea label="Text" name="text" formik={formik} />
 
-          {!formik.isValid && !!formik.submitCount && (
-            <Alert color="red">Some fields are invalid</Alert>
-          )}
-          {submittingError && <Alert color="red">{submittingError}</Alert>}
+          <Alert {...alertProps} />
 
-          <Button loading={formik.isSubmitting}>Update Idea</Button>
+          <Button {...buttonProps}>Update Idea</Button>
         </FormItems>
       </form>
     </Segment>
