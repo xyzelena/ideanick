@@ -4,7 +4,9 @@ import {
 } from '@trpc/react-query/shared';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ErrorPageComponent } from '../components/ErrorPageComponent';
+
+import { NotFoundPage } from '../pages/NotFoundPage';
+
 import { useAppContext, type AppContext } from './ctx';
 import { getAllIdeasRoute } from './routes';
 
@@ -78,8 +80,8 @@ const PageWrapper = <
   checkAccessTitle = 'Access Denied',
   checkAccessMessage = 'You have no access to this page',
   checkExists,
-  checkExistsTitle = 'Not Found',
-  checkExistsMessage = 'This page does not exist',
+  checkExistsTitle,
+  checkExistsMessage,
   useQuery,
   setProps,
   Page,
@@ -101,12 +103,12 @@ const PageWrapper = <
   }
 
   if (queryResult?.isError) {
-    return <ErrorPageComponent message={queryResult.error.message} />;
+    return <NotFoundPage message={queryResult.error.message} />;
   }
 
   if (authorizedOnly && !ctx.me) {
     return (
-      <ErrorPageComponent
+      <NotFoundPage
         title={authorizedOnlyTitle}
         message={authorizedOnlyMessage}
       />
@@ -119,10 +121,7 @@ const PageWrapper = <
     const accessDenied = !checkAccess(helperProps);
     if (accessDenied) {
       return (
-        <ErrorPageComponent
-          title={checkAccessTitle}
-          message={checkAccessMessage}
-        />
+        <NotFoundPage title={checkAccessTitle} message={checkAccessMessage} />
       );
     }
   }
@@ -131,10 +130,7 @@ const PageWrapper = <
     const notExists = !checkExists(helperProps);
     if (notExists) {
       return (
-        <ErrorPageComponent
-          title={checkExistsTitle}
-          message={checkExistsMessage}
-        />
+        <NotFoundPage title={checkExistsTitle} message={checkExistsMessage} />
       );
     }
   }
@@ -149,7 +145,7 @@ const PageWrapper = <
   } catch (error) {
     if (error instanceof CheckExistsError) {
       return (
-        <ErrorPageComponent
+        <NotFoundPage
           title={checkExistsTitle}
           message={error.message || checkExistsMessage}
         />
@@ -157,7 +153,7 @@ const PageWrapper = <
     }
     if (error instanceof CheckAccessError) {
       return (
-        <ErrorPageComponent
+        <NotFoundPage
           title={checkAccessTitle}
           message={error.message || checkAccessMessage}
         />

@@ -9,6 +9,7 @@ import { TrpcProvider } from './lib/trpc';
 import { AllIdeasPage } from './pages/AllIdeasPage';
 import { EditIdeaPage } from './pages/EditIdeaPage';
 import { NewIdeaPage } from './pages/NewIdeaPage';
+import { NotFoundPage } from './pages/NotFoundPage';
 import { SignInPage } from './pages/SignInPage';
 import { SignOutPage } from './pages/SignOutPage';
 import { SignUpPage } from './pages/SignUpPage';
@@ -42,6 +43,7 @@ export const App = () => {
                 path={routes.getEditIdeaRoute(routes.editIdeaRouteParams)}
                 element={<EditIdeaPage />}
               />
+              <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
         </BrowserRouter>
