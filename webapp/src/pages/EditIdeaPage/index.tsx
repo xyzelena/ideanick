@@ -1,42 +1,28 @@
 import { useParams } from 'react-router-dom';
 
-import { useMe } from '../../lib/ctx';
+import { withPageWrapper } from '../../lib/pageWrapper';
 import { type EditIdeaRouteParams } from '../../lib/routes';
 
 import { trpc } from '../../lib/trpc';
-
 import { EditIdeaComponent } from './EditIdeaComponent';
 
-export const EditIdeaPage = () => {
-  const { ideaNick } = useParams() as EditIdeaRouteParams;
-
-  const me = useMe();
-
-  const getIdeaResult = trpc.getIdea.useQuery({
-    ideaNick,
-  });
-
-  if (getIdeaResult.isLoading || getIdeaResult.isFetching) {
-    return <span>Loading...</span>;
-  }
-
-  if (getIdeaResult.isError) {
-    return <span>Error: {getIdeaResult.error.message}</span>;
-  }
-
-  if (!getIdeaResult.data?.idea) {
-    return <span>Idea not found</span>;
-  }
-
-  const idea = getIdeaResult.data.idea;
-
-  if (!me) {
-    return <span>Only for authorized</span>;
-  }
-
-  if (me.id !== idea.authorId) {
-    return <span>An idea can only be edited by the author</span>;
-  }
-
+export const EditIdeaPage = withPageWrapper({
+  authorizedOnly: true,
+  useQuery: () => {
+    const { ideaNick } = useParams() as EditIdeaRouteParams;
+    return trpc.getIdea.useQuery({
+      ideaNick,
+    });
+  },
+  checkExists: ({ queryResult }) => !!queryResult.data.idea,
+  checkExistsMessage: 'Idea not found',
+  checkAccess: ({ queryResult, ctx }) =>
+    !!ctx.me && ctx.me.id === queryResult.data.idea?.authorId,
+  checkAccessMessage: 'An idea can only be edited by the author',
+  setProps: ({ queryResult }) => ({
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    idea: queryResult.data.idea!,
+  }),
+})(({ idea }) => {
   return <EditIdeaComponent idea={idea} />;
-};
+});

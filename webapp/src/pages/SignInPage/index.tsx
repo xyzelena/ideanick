@@ -1,6 +1,5 @@
 import { zSignInTrpcInput } from '@ideanick/backend/src/router/signIn/input';
 import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
 
 import { Alert } from '../../components/Alert';
 import { Button } from '../../components/Button';
@@ -9,12 +8,12 @@ import { Input } from '../../components/Input';
 import { Segment } from '../../components/Segment';
 
 import { useForm } from '../../lib/form';
-import { getAllIdeasRoute } from '../../lib/routes';
+import { withPageWrapper } from '../../lib/pageWrapper';
 import { trpc } from '../../lib/trpc';
 
-export const SignInPage = () => {
-  const navigate = useNavigate();
-
+export const SignInPage = withPageWrapper({
+  redirectAuthorized: true,
+})(() => {
   const trpcUtils = trpc.useUtils();
 
   const signIn = trpc.signIn.useMutation();
@@ -29,7 +28,6 @@ export const SignInPage = () => {
       const { token } = await signIn.mutateAsync(values);
       Cookies.set('token', token, { expires: 99999 });
       void trpcUtils.invalidate();
-      void navigate(getAllIdeasRoute());
     },
     resetOnSuccess: false,
     showValidationAlert: true,
@@ -52,4 +50,4 @@ export const SignInPage = () => {
       </form>
     </Segment>
   );
-};
+});
