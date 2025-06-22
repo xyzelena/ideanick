@@ -5,7 +5,7 @@ import {
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { NotFoundPage } from '../pages/NotFoundPage';
+import { NotFoundPage } from '../pages/other/NotFoundPage';
 
 import { useAppContext, type AppContext } from './ctx';
 import { getAllIdeasRoute } from './routes';
